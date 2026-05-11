@@ -37,7 +37,7 @@ st.set_page_config(
     page_title="MD → PDF Converter",
     page_icon="🌿",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",   # sidebar hidden by default
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -56,29 +56,14 @@ st.markdown("""
     min-height: 100vh;
   }
 
-  /* ── Sidebar ─────────────────────────────────────────────────────────── */
-  section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
-    border-right: 2px solid #bbf7d0;
-    box-shadow: 4px 0 20px rgba(16, 185, 129, 0.08);
-  }
-  section[data-testid="stSidebar"] .stMarkdown h1,
-  section[data-testid="stSidebar"] .stMarkdown h2,
-  section[data-testid="stSidebar"] .stMarkdown h3,
-  section[data-testid="stSidebar"] .stMarkdown p,
-  section[data-testid="stSidebar"] .stMarkdown label,
-  section[data-testid="stSidebar"] label {
-    color: #166534 !important;
-  }
-  section[data-testid="stSidebar"] .stMarkdown h2 {
-    font-size: 1.1rem !important;
-    letter-spacing: -0.01em;
-  }
+  /* ── Hide sidebar toggle (we moved settings inline) ─────────────────── */
+  section[data-testid="stSidebar"] { display: none; }
+  [data-testid="collapsedControl"]  { display: none; }
 
   /* ── Header ──────────────────────────────────────────────────────────── */
   .main-header {
     text-align: center;
-    padding: 2rem 0 1.5rem;
+    padding: 1.5rem 0 1rem;
   }
   .main-header h1 {
     background: linear-gradient(135deg, #059669, #10b981, #34d399);
@@ -86,41 +71,60 @@ st.markdown("""
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 700;
-    font-size: 3rem;
-    margin-bottom: 0.25rem;
+    font-size: 2.6rem;
+    margin-bottom: 0.2rem;
     letter-spacing: -0.03em;
   }
   .main-header p {
-    color: #4ade80;
-    font-size: 1.05rem;
-    font-weight: 400;
     color: #15803d;
+    font-size: 1rem;
+    font-weight: 400;
   }
   .main-header .leaf {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.4rem;
     display: block;
     animation: float 3s ease-in-out infinite;
   }
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
+    50%       { transform: translateY(-6px); }
   }
 
-  /* ── Cards ───────────────────────────────────────────────────────────── */
-  .green-card {
+  /* ── Settings panel (expander) ───────────────────────────────────────── */
+  .settings-panel {
     background: #ffffff;
     border: 1.5px solid #bbf7d0;
     border-radius: 18px;
-    padding: 1.75rem;
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 2px 16px rgba(16,185,129,0.07);
     margin-bottom: 1rem;
   }
-  .green-card h3 {
-    color: #166534;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
+  .settings-title {
+    color: #059669;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ── Streamlit expander styling ──────────────────────────────────────── */
+  .streamlit-expanderHeader {
+    background: #f0fdf4 !important;
+    border: 1.5px solid #bbf7d0 !important;
+    border-radius: 14px !important;
+    color: #166534 !important;
+    font-weight: 600 !important;
+    padding: 0.7rem 1rem !important;
+  }
+  .streamlit-expanderContent {
+    background: #ffffff !important;
+    border: 1.5px solid #bbf7d0 !important;
+    border-top: none !important;
+    border-radius: 0 0 14px 14px !important;
+    padding: 1rem !important;
   }
 
   /* ── Tabs ────────────────────────────────────────────────────────────── */
@@ -135,25 +139,25 @@ st.markdown("""
     border-radius: 10px !important;
     color: #166534 !important;
     font-weight: 500 !important;
-    padding: 0.5rem 1.5rem !important;
+    padding: 0.5rem 1.2rem !important;
     transition: all 0.2s ease !important;
   }
   .stTabs [aria-selected="true"] {
     background: linear-gradient(135deg, #10b981, #059669) !important;
     color: white !important;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3) !important;
   }
 
   /* ── Upload area ─────────────────────────────────────────────────────── */
   .stFileUploader > div {
-    border: 2px dashed rgba(16, 185, 129, 0.5) !important;
+    border: 2px dashed rgba(16,185,129,0.5) !important;
     border-radius: 16px !important;
-    background: rgba(16, 185, 129, 0.04) !important;
+    background: rgba(16,185,129,0.04) !important;
     transition: all 0.3s ease;
   }
   .stFileUploader > div:hover {
-    border-color: rgba(16, 185, 129, 0.8) !important;
-    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: rgba(16,185,129,0.8) !important;
+    background: rgba(16,185,129,0.08) !important;
   }
 
   /* ── Text area ───────────────────────────────────────────────────────── */
@@ -168,7 +172,7 @@ st.markdown("""
   }
   .stTextArea textarea:focus {
     border-color: #10b981 !important;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.15) !important;
   }
 
   /* ── Buttons ─────────────────────────────────────────────────────────── */
@@ -182,48 +186,41 @@ st.markdown("""
     font-size: 0.95rem !important;
     letter-spacing: 0.02em !important;
     transition: all 0.3s ease !important;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35) !important;
+    box-shadow: 0 4px 15px rgba(16,185,129,0.35) !important;
   }
   .stButton > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5) !important;
-  }
-
-  /* ── Slider ──────────────────────────────────────────────────────────── */
-  .stSlider [data-baseweb="slider"] div[role="slider"] {
-    background: #10b981 !important;
+    box-shadow: 0 8px 25px rgba(16,185,129,0.5) !important;
   }
 
   /* ── Stats badges ────────────────────────────────────────────────────── */
   .stat-badge {
     display: inline-block;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
     border-radius: 20px;
     padding: 0.35rem 0.85rem;
     color: #166534;
-    font-size: 0.85rem;
-    margin: 0.25rem;
+    font-size: 0.82rem;
+    margin: 0.2rem;
     font-weight: 500;
   }
-  .stat-badge strong {
-    color: #059669;
-  }
+  .stat-badge strong { color: #059669; }
 
   /* ── Feature badges ──────────────────────────────────────────────────── */
   .feature-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 0.4rem;
-    margin-top: 0.6rem;
+    margin-top: 0.5rem;
   }
   .feature-tag {
     background: #f0fdf4;
     border: 1px solid #bbf7d0;
     border-radius: 8px;
-    padding: 0.35rem 0.5rem;
+    padding: 0.3rem 0.5rem;
     color: #166534;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     text-align: center;
     font-weight: 500;
   }
@@ -231,7 +228,7 @@ st.markdown("""
   /* ── Success banner ──────────────────────────────────────────────────── */
   .success-banner {
     background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(52,211,153,0.12));
-    border: 1.5px solid rgba(16, 185, 129, 0.4);
+    border: 1.5px solid rgba(16,185,129,0.4);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     color: #166534;
@@ -239,12 +236,17 @@ st.markdown("""
     margin-bottom: 1rem;
   }
 
-  /* ── Divider ─────────────────────────────────────────────────────────── */
-  hr {
-    border-color: #bbf7d0 !important;
+  /* ── Green card ──────────────────────────────────────────────────────── */
+  .green-card {
+    background: #ffffff;
+    border: 1.5px solid #bbf7d0;
+    border-radius: 18px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(16,185,129,0.08);
+    margin-bottom: 1rem;
   }
 
-  /* ── Selectbox / Input ───────────────────────────────────────────────── */
+  /* ── Inputs / selects ────────────────────────────────────────────────── */
   .stSelectbox [data-baseweb="select"] > div,
   .stTextInput > div > div > input {
     border-color: #bbf7d0 !important;
@@ -252,88 +254,18 @@ st.markdown("""
     background: #ffffff !important;
     color: #166534 !important;
   }
+  .stCheckbox label span { color: #166534 !important; }
+  hr { border-color: #bbf7d0 !important; }
 
-  /* ── Checkbox ────────────────────────────────────────────────────────── */
-  .stCheckbox label span {
-    color: #166534 !important;
-  }
-
-  /* ── Caption ─────────────────────────────────────────────────────────── */
-  .stCaption {
-    color: #4ade80 !important;
-    color: #15803d !important;
-  }
+  /* ── Mobile-friendly label colours ──────────────────────────────────── */
+  label, .stMarkdown p { color: #166534; }
 
   /* ── Hide Streamlit branding ──────────────────────────────────────────── */
   #MainMenu { visibility: hidden; }
-  footer { visibility: hidden; }
-  header { visibility: hidden; }
+  footer    { visibility: hidden; }
+  header    { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  Sidebar – settings
-# ──────────────────────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("## 🌿 PDF Settings")
-    st.markdown("---")
-
-    page_size = st.selectbox(
-        "📐 Page Size",
-        ["A4", "Letter", "Legal", "A3", "A5", "Tabloid"],
-        index=0,
-        help="Choose the output PDF page size",
-    )
-
-    st.markdown("##### 🔤 Font Scale")
-    font_scale = st.slider(
-        "Overall font size",
-        min_value=0.6,
-        max_value=2.0,
-        value=1.0,
-        step=0.05,
-        format="%.2fx",
-        help="Scales all text proportionally. Headings stay larger than body text.",
-    )
-    st.caption(f"Base: **{round(16 * font_scale, 1)} px** · headings scale together")
-
-    st.markdown("---")
-    st.markdown("##### 📏 Margins")
-    col_m1, col_m2 = st.columns(2)
-    with col_m1:
-        margin_top    = st.text_input("Top",    value="20mm", help="Top margin")
-        margin_left   = st.text_input("Left",   value="25mm", help="Left margin")
-    with col_m2:
-        margin_bottom = st.text_input("Bottom", value="20mm", help="Bottom margin")
-        margin_right  = st.text_input("Right",  value="25mm", help="Right margin")
-
-    st.markdown("---")
-
-    show_page_numbers = st.checkbox(
-        "Show page numbers",
-        value=True,
-        help="Add page numbers at the bottom of each page",
-    )
-
-    show_preview = st.checkbox(
-        "Show HTML preview",
-        value=True,
-        help="Display a live preview of the rendered Markdown",
-    )
-
-    st.markdown("---")
-    st.markdown("##### 🎨 Supported Features")
-    features = [
-        "📝 GFM Syntax", "🔤 Headings", "💻 Code Blocks",
-        "📊 Tables",     "✅ Task Lists","📝 Footnotes",
-        "🧮 Math (KaTeX)","📈 Mermaid",  "⚠️ Alerts",
-        "🖼️ Images",     "🔗 Links",    "~~Strikethrough~~",
-    ]
-    feature_html = '<div class="feature-grid">' + "".join(
-        f'<div class="feature-tag">{f}</div>' for f in features
-    ) + '</div>'
-    st.markdown(feature_html, unsafe_allow_html=True)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -349,12 +281,59 @@ st.markdown("""
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+#  ⚙️ Settings Panel (inline — works on mobile!)
+# ──────────────────────────────────────────────────────────────────────────────
+with st.expander("⚙️ PDF Settings", expanded=False):
+    col1, col2, col3 = st.columns([1, 1, 1])
+
+    with col1:
+        page_size = st.selectbox(
+            "📐 Page Size",
+            ["A4", "Letter", "Legal", "A3", "A5", "Tabloid"],
+            index=0,
+            help="Output PDF page size",
+        )
+        show_page_numbers = st.checkbox("Show page numbers", value=True)
+        show_preview      = st.checkbox("Show HTML preview", value=True)
+
+    with col2:
+        st.markdown("**📏 Margins**")
+        mc1, mc2 = st.columns(2)
+        with mc1:
+            margin_top    = st.text_input("Top",    value="20mm")
+            margin_left   = st.text_input("Left",   value="25mm")
+        with mc2:
+            margin_bottom = st.text_input("Bottom", value="20mm")
+            margin_right  = st.text_input("Right",  value="25mm")
+
+    with col3:
+        st.markdown("**🔤 Font Scale**")
+        font_scale = st.slider(
+            "Overall size",
+            min_value=0.6, max_value=2.0, value=1.0, step=0.05,
+            format="%.2fx",
+            help="Scales all text proportionally. Headings stay bigger.",
+        )
+        st.caption(f"Base: **{round(16 * font_scale, 1)} px**")
+
+        st.markdown("**🎨 Features**")
+        features = [
+            "📝 GFM","💻 Code","📊 Tables","✅ Tasks",
+            "🧮 Math","📈 Mermaid","⚠️ Alerts","🔗 Links",
+        ]
+        feat_html = '<div class="feature-grid">' + "".join(
+            f'<div class="feature-tag">{f}</div>' for f in features
+        ) + '</div>'
+        st.markdown(feat_html, unsafe_allow_html=True)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 #  Input – Upload OR Paste (tabs)
 # ──────────────────────────────────────────────────────────────────────────────
 tab_upload, tab_paste = st.tabs(["📂 Upload File", "📋 Paste Markdown"])
 
-md_content  = None
-file_stem   = "document"
+md_content = None
+file_stem  = "document"
 
 with tab_upload:
     uploaded_file = st.file_uploader(
@@ -370,7 +349,7 @@ with tab_upload:
 with tab_paste:
     pasted_text = st.text_area(
         "Paste your Markdown content here",
-        height=320,
+        height=300,
         placeholder="# Hello World\n\nPaste your **markdown** here and click Convert!\n\n- Item 1\n- Item 2",
         help="Paste any Markdown text directly — no file needed.",
         key="paste_input",
@@ -379,7 +358,6 @@ with tab_paste:
         "Output filename (without extension)",
         value="document",
         key="paste_filename",
-        help="This becomes the PDF filename",
     )
     if pasted_text and pasted_text.strip():
         md_content = pasted_text
@@ -387,22 +365,21 @@ with tab_paste:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-#  Main content – only if we have markdown
+#  Main content
 # ──────────────────────────────────────────────────────────────────────────────
 if md_content:
     lines = md_content.count("\n") + 1
     words = len(md_content.split())
     chars = len(md_content)
 
-    stats_html = f"""
-    <div style="text-align: center; margin: 1rem 0;">
+    st.markdown(f"""
+    <div style="text-align:center; margin:1rem 0;">
       <span class="stat-badge">📄 <strong>{file_stem}</strong></span>
       <span class="stat-badge">📏 <strong>{lines:,}</strong> lines</span>
       <span class="stat-badge">📝 <strong>{words:,}</strong> words</span>
       <span class="stat-badge">🔤 <strong>{chars:,}</strong> chars</span>
     </div>
-    """
-    st.markdown(stats_html, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     # ── Preview ───────────────────────────────────────────────────────────
     if show_preview:
@@ -418,26 +395,21 @@ if md_content:
                     font_scale=font_scale,
                 )
             b64_html = base64.b64encode(html_preview.encode("utf-8")).decode("utf-8")
-            iframe_html = (
+            st.markdown(
                 f'<iframe src="data:text/html;base64,{b64_html}" '
-                f'width="100%" height="700" '
-                f'style="border: 1.5px solid #bbf7d0; border-radius: 14px; background: #fff;"'
-                f'></iframe>'
+                f'width="100%" height="680" '
+                f'style="border:1.5px solid #bbf7d0; border-radius:14px; background:#fff;">'
+                f'</iframe>',
+                unsafe_allow_html=True,
             )
-            st.markdown(iframe_html, unsafe_allow_html=True)
 
     # ── Convert button ────────────────────────────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
     with col_btn2:
-        convert_clicked = st.button(
-            "🚀 Convert to PDF",
-            use_container_width=True,
-            type="primary",
-        )
+        convert_clicked = st.button("🚀 Convert to PDF", use_container_width=True, type="primary")
 
     if convert_clicked:
-        # Clear any previous result when new conversion starts
         for k in ("pdf_bytes", "pdf_name", "elapsed"):
             st.session_state.pop(k, None)
 
@@ -479,33 +451,29 @@ if md_content:
         col_dl1, col_dl2, col_dl3 = st.columns([1, 2, 1])
         with col_dl2:
             b64_pdf = base64.b64encode(pdf_bytes).decode("utf-8")
-            download_html = f'''
+            st.markdown(f'''
                 <a href="data:application/pdf;base64,{b64_pdf}" download="{pdf_name}"
-                   style="display: block; width: 100%; text-align: center;
-                          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                          color: white; text-decoration: none; padding: 0.7rem 1.5rem;
-                          border-radius: 12px; font-weight: 600; font-size: 0.95rem;
-                          box-shadow: 0 4px 15px rgba(16,185,129,0.35);
-                          transition: all 0.3s ease;">
+                   style="display:block; width:100%; text-align:center;
+                          background:linear-gradient(135deg,#10b981,#059669);
+                          color:white; text-decoration:none; padding:0.7rem 1.5rem;
+                          border-radius:12px; font-weight:600; font-size:0.95rem;
+                          box-shadow:0 4px 15px rgba(16,185,129,0.35);">
                    ⬇️ Download {pdf_name}
                 </a>
-            '''
-            st.markdown(download_html, unsafe_allow_html=True)
+            ''', unsafe_allow_html=True)
 
 else:
     # ── Empty state ───────────────────────────────────────────────────────
     st.markdown("""
-    <div class="green-card" style="text-align: center; padding: 3rem 2rem;">
-      <div style="font-size: 3.5rem; margin-bottom: 0.75rem;">🌿</div>
-      <h3 style="color: #166534; font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 700;">
+    <div class="green-card" style="text-align:center; padding:2.5rem 2rem;">
+      <div style="font-size:3rem; margin-bottom:0.6rem;">🌿</div>
+      <h3 style="color:#166534; font-size:1.4rem; margin-bottom:0.6rem; font-weight:700;">
         Upload or paste your Markdown
       </h3>
-      <p style="color: #4b7c59; max-width: 520px; margin: 0 auto; line-height: 1.8; font-size: 0.95rem;">
-        Use the <strong>Upload File</strong> tab to drag &amp; drop a
-        <code style="color: #059669; background: #f0fdf4; padding: 2px 6px; border-radius: 4px;">.md</code> file,
-        or switch to <strong>Paste Markdown</strong> to type or paste content directly.<br><br>
-        Your document will be rendered with GitHub-accurate styling — syntax highlighting,
-        math equations, Mermaid diagrams — then exported as a perfect PDF.
+      <p style="color:#4b7c59; max-width:520px; margin:0 auto; line-height:1.8; font-size:0.92rem;">
+        Use the <strong>Upload File</strong> tab for a <code>.md</code> file,
+        or <strong>Paste Markdown</strong> to type content directly.<br><br>
+        Tap <strong>⚙️ PDF Settings</strong> above to adjust page size, margins, and font scale.
       </p>
     </div>
     """, unsafe_allow_html=True)
