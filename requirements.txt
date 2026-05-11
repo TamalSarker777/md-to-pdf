@@ -1,0 +1,10 @@
+streamlit>=1.57.0
+markdown-it-py[plugins,linkify]>=3.0.0
+mdit-py-plugins>=0.4.0
+linkify-it-py>=2.0.0
+pygments>=2.17.0
+playwright>=1.40.0
+
+# NOTE: After pip install, Playwright also needs its browser binaries.
+# On local machine run:  playwright install chromium
+# On Streamlit Cloud this is handled automatically by packages.txt + app startup code.
